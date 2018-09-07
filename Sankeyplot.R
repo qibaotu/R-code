@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 ### Sankey plot
 library(googleVis)
 library(mclust)
@@ -126,5 +126,5 @@ res <-res[c('From','To','weight')]
 RES <-rbind(RES,res)
 
 sk1 <- gvisSankey(RES, from="From", to="To", weight="weight")
->>>>>>> 50c7be2efff44fd5ba8a23f5da6d7fbc64167d2e
+
 plot(sk1)
