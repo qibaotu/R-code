@@ -1,4 +1,4 @@
-## hypergeomettic 
+## hypergeometric 
 # https://stackoverflow.com/questions/8382806/r-hypergeometric-test-phyper
 #########################  ENrich2 output every regulator and corresponding P-value for each BC   ###
 PATHS <-list.files(path="/pylon5/cc5fpcp/xiej/modules/",pattern="*csv",full.names=T,recursive=FALSE)
