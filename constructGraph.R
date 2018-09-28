@@ -1,21 +1,29 @@
-## scRNA-seq DATA #
-setwd("/home/xiej/Juan/Experiment/Yan/KL/7")
-files <- list.files(path="/home/xiej/Juan/Experiment/Yan/KL/7/Conds/", pattern="Yan*", full.names=T, recursive=FALSE)
+### step2: construct weighted graph  ##
+
+setwd('C:/Users/Juan.XIe/Desktop/test1/BC/')
+files <-list.files(path=getwd(),pattern='*blocks',full.names=T, recursive=FALSE)
+
+fOUT <-'C:/Users/Juan.XIe/Desktop/test1/BC/Graph/'  # define the path for the output weighted graph
 
 for (i in 1:length(files)){
-	BC <- readLines(files[i])  # (i-1)th BC
-	BCnum <-length(BC)
-	newTxt <- unlist(strsplit(BC, split = " "))  # extract all the conditions
-	conds <-unique(newTxt[newTxt!=""])   # unique conditions
-	if (BCnum >2 & length(conds==90)){   # only consider results that with more than 2 BCs and cover all conditions
-		CONDS <-as.character()   # store the conditions 
-		label_C <-as.numeric()   # store the occurence of one condistions
-		for (j in 1:BCnum){
+	F <-readLines(files[i])  # read .blocks file
+	TEMP <-grep('Conds',F,value=T) ## extract condition lines in each BC
+	BC <-sapply(strsplit(TEMP,':',2),'[',2) # only keep cell names
+	temp1 <-gsub('#','_',BC)  # replace # with _
+	temp2 <-gsub('-','_',temp1)  
+	temp3 <-gsub('c','C',temp2) 
+	BC <-temp3
+
+	CONDS <-as.character()   # store the conditions 
+	label_C <-as.numeric()   # store the occurence of one condistions
+
+	for (j in 1:length(BC)){
 		BCcond <-unlist(strsplit(BC[j], split = " "))
 		BCcond <-BCcond[BCcond!=""]  # exclude the blank string
 		CONDS <-c(BCcond,CONDS)
 		label_C <-c(label_C,rep(j,length(BCcond)))
-		}
+	}
+
 	df_C <-data.frame(conds=CONDS,label=label_C)
 	uniq_C <-df_C$conds[!duplicated(df_C$conds)]   # unique conditions
 	Node <-t(combn(uniq_C,2))
@@ -28,12 +36,9 @@ for (i in 1:length(files)){
 	}
 	GRAPH <-data.frame(Node[,1],Node[,2],Wt)
 	if (dim(GRAPH)[1]!=0)	{
-		write.csv(subset(GRAPH,Wt!=0,select=Node...1.:Wt),paste(basename(files[i]),".csv",sep=","),row.names=F)
-		}
+	write.csv(subset(GRAPH,Wt!=0),paste(fOUT,basename(files[i]),".csv",sep=""))
 	}
 }
 
-print("Done")
 
-	
 
